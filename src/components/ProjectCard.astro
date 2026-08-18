@@ -34,18 +34,32 @@ const detailUrl = `/work/${project.slug}`;
       </div>
     </div>
 
-    {project.links?.github && (
+    {(project.links?.github || project.links?.live) && (
       <div class="project-links">
-        <a
-          href={project.links.github}
-          class="project-ext-link"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${project.title} GitHub repository (opens in new tab)`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          ↗
-        </a>
+        {project.links.github && (
+          <a
+            href={project.links.github}
+            class="project-ext-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${project.title} GitHub repository (opens in new tab)`}
+            title="View source on GitHub"
+          >
+            GitHub ↗
+          </a>
+        )}
+        {project.links.live && (
+          <a
+            href={project.links.live}
+            class="project-ext-link project-ext-link--live"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${project.title} live demo (opens in new tab)`}
+            title="View live project"
+          >
+            Live ↗
+          </a>
+        )}
       </div>
     )}
   </div>
@@ -162,29 +176,47 @@ const detailUrl = `/work/${project.slug}`;
     border-radius: 2px;
   }
 
-  /* External link */
+  /* External links */
   .project-links {
     padding-top: 0.2rem;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-end;
   }
 
   .project-ext-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    font-size: 0.85rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--muted);
     text-decoration: none;
     border: 1px solid var(--bg-border);
     transition: color 0.2s ease, border-color 0.2s ease;
     border-radius: 2px;
+    white-space: nowrap;
   }
 
   .project-ext-link:hover {
+    color: var(--ink);
+    border-color: var(--muted);
+  }
+
+  .project-ext-link--live {
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .project-ext-link--live:hover {
     color: var(--accent);
     border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
   }
 
   /* Responsive */
