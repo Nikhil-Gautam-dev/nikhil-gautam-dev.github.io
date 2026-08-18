@@ -34,7 +34,7 @@ function formatDate(date: Date): string {
       <div class="blog-list" role="list">
         {latestPosts.map((post) => (
           <article class="blog-item" role="listitem">
-            <a href={`/blog/${post.slug}`} class="blog-item-link" aria-label={`Read: ${post.data.title}`}>
+            <a href={`/blog/${post.id}`} class="blog-item-link" aria-label={`Read: ${post.data.title}`}>
               <div class="blog-item-content">
                 <h3 class="blog-item-title">{post.data.title}</h3>
                 <div class="blog-item-meta">

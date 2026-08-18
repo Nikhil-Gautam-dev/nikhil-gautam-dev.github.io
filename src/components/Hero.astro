@@ -1,14 +1,13 @@
 ---
-import { site } from '../data/site';
-import heroIllustration from '../assets/hero-illustration.png';
+import { site } from "../data/site";
+import heroIllustration from "../assets/hero-illustration.png";
+import profileImage from "../assets/profile-img.png";
 ---
 
 <section class="hero" aria-label="Introduction">
   <div class="container hero-inner">
-
     <!-- Left: text content -->
     <div class="hero-content">
-
       <!-- Identity label -->
       <p class="hero-label" data-hero="label">
         <span class="label-star" aria-hidden="true">✳</span>
@@ -27,9 +26,8 @@ import heroIllustration from '../assets/hero-illustration.png';
 
       <!-- Positioning statement -->
       <p class="hero-tagline" data-hero="tagline">
-        I build backend systems, APIs, and products
-        with a focus on reliability, scalability,
-        and clean architecture.
+        I build backend systems, APIs, and products with a focus on reliability,
+        scalability, and clean architecture.
       </p>
 
       <!-- CTAs -->
@@ -59,14 +57,13 @@ import heroIllustration from '../assets/hero-illustration.png';
           <span class="arrow" aria-hidden="true">↗</span>
         </a>
       </div>
-
     </div>
 
     <!-- Right: illustration -->
     <div class="hero-visual" data-hero="visual" aria-hidden="true">
       <div class="hero-image-wrap">
         <img
-          src={heroIllustration.src}
+          src={profileImage.src}
           alt="Backend code illustration — JWT auth and database transaction"
           class="hero-image"
           width="540"
@@ -76,17 +73,19 @@ import heroIllustration from '../assets/hero-illustration.png';
         />
         <!-- Decorative corner accent -->
         <div class="hero-image-corner" aria-hidden="true"></div>
+        <div class="hero-image-corner-bottom" aria-hidden="true"></div>
       </div>
     </div>
-
   </div>
 </section>
 
 <script>
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
   if (!prefersReducedMotion) {
-    const elements = document.querySelectorAll<HTMLElement>('[data-hero]');
+    const elements = document.querySelectorAll<HTMLElement>("[data-hero]");
     const delays: Record<string, number> = {
       label: 0,
       first: 150,
@@ -97,16 +96,18 @@ import heroIllustration from '../assets/hero-illustration.png';
     };
 
     elements.forEach((el) => {
-      const key = el.getAttribute('data-hero') ?? '';
+      const key = el.getAttribute("data-hero") ?? "";
       const delay = delays[key] ?? 0;
 
-      el.style.opacity = '0';
-      el.style.transform = key === 'visual' ? 'translateY(16px)' : 'translateY(20px)';
+      el.style.opacity = "0";
+      el.style.transform =
+        key === "visual" ? "translateY(16px)" : "translateY(20px)";
 
       setTimeout(() => {
-        el.style.transition = 'opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
+        el.style.transition =
+          "opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        el.style.opacity = "1";
+        el.style.transform = "translateY(0)";
       }, delay);
     });
   }
@@ -245,6 +246,17 @@ import heroIllustration from '../assets/hero-illustration.png';
     border-top: 2px solid var(--accent);
     border-right: 2px solid var(--accent);
     pointer-events: none;
+  }
+
+  .hero-image-corner-bottom {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-bottom: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+    pointer-events: none;
+    bottom: -8px;
+    left: -8px;
   }
 
   /* ── RESPONSIVE ──────────────────────────── */

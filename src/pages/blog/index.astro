@@ -50,7 +50,7 @@ function formatDate(date: Date): string {
         <div class="blog-full-list" role="list">
           {posts.map((post) => (
             <article class="blog-full-item" role="listitem">
-              <a href={`/blog/${post.slug}`} class="blog-full-link" aria-label={`Read: ${post.data.title}`}>
+              <a href={`/blog/${post.id}`} class="blog-full-link" aria-label={`Read: ${post.data.title}`}>
                 <div class="blog-full-content">
                   <div class="blog-full-meta">
                     <span class="label label-accent">{post.data.category}</span>
