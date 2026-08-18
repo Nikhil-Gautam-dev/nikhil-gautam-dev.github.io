@@ -1,0 +1,211 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="hero section-py" aria-label="Introduction">
+  <div class="container hero-inner">
+
+    <!-- Identity label -->
+    <p class="hero-label" data-hero="label">
+      <span class="label-star" aria-hidden="true">✳</span>
+      <span>Backend Engineer</span>
+      <span class="hero-label-sep" aria-hidden="true">·</span>
+      <span>Builder</span>
+      <span class="hero-label-sep" aria-hidden="true">·</span>
+      <span>Problem Solver</span>
+    </p>
+
+    <!-- Name -->
+    <h1 class="hero-name" aria-label="Nikhil Gautam">
+      <span class="hero-firstname" data-hero="first">NIKHIL</span>
+      <span class="hero-lastname" data-hero="last">GAUTAM</span>
+    </h1>
+
+    <!-- Positioning statement -->
+    <p class="hero-tagline" data-hero="tagline">
+      I build backend systems, APIs, and products<br class="tagline-br" />
+      with a focus on reliability, scalability,<br class="tagline-br" />
+      and clean architecture.
+    </p>
+
+    <!-- CTAs -->
+    <div class="hero-ctas" data-hero="ctas">
+      <a href="/work" class="btn">
+        View Work
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+      <a
+        href={site.github}
+        class="btn btn-ghost"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub profile (opens in new tab)"
+      >
+        GitHub
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <a
+        href={site.linkedin}
+        class="btn btn-ghost"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn profile (opens in new tab)"
+      >
+        LinkedIn
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  // Staggered entrance animation
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const elements = document.querySelectorAll<HTMLElement>('[data-hero]');
+    const delays: Record<string, number> = {
+      label: 0,
+      first: 150,
+      last: 280,
+      tagline: 460,
+      ctas: 620,
+    };
+
+    elements.forEach((el) => {
+      const key = el.getAttribute('data-hero') ?? '';
+      const delay = delays[key] ?? 0;
+
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+
+      setTimeout(() => {
+        el.style.transition = 'opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, delay);
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    padding-top: clamp(4rem, 8vw, 7rem);
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  /* Identity label */
+  .hero-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+
+  .label-star {
+    color: var(--accent);
+    font-size: 0.8rem;
+  }
+
+  .hero-label-sep {
+    color: var(--bg-border);
+  }
+
+  /* Name */
+  .hero-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 0.92;
+    gap: 0;
+    margin: 0;
+  }
+
+  .hero-firstname,
+  .hero-lastname {
+    font-family: var(--font-display);
+    font-size: clamp(5.5rem, 15vw, 12.5rem);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 0.93;
+    display: block;
+  }
+
+  .hero-lastname {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--ink);
+  }
+
+  /* Tagline */
+  .hero-tagline {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .tagline-br {
+    display: block;
+  }
+
+  @media (max-width: 480px) {
+    .tagline-br {
+      display: none;
+    }
+  }
+
+  /* CTAs */
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .btn-ghost {
+    border-color: var(--bg-border);
+    color: var(--muted);
+    background: transparent;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--ink);
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .btn-ghost .arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-ghost:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .hero-inner {
+      gap: 1.75rem;
+    }
+
+    .hero-label {
+      gap: 0.4rem;
+    }
+
+    .hero-ctas {
+      gap: 0.6rem;
+    }
+  }
+</style>

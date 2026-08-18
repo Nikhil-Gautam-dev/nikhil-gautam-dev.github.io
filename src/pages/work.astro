@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectList from '../components/ProjectList.astro';
+---
+
+<BaseLayout
+  title="Work"
+  description="Backend engineering projects — authentication systems, healthcare APIs, and more."
+>
+  <div class="work-page-header section-py-sm">
+    <div class="container">
+      <p class="label label-accent">Selected Work</p>
+      <h1 class="work-page-title">Engineering<br />Projects</h1>
+      <p class="work-page-desc">
+        A curated selection of backend systems, APIs, and infrastructure work.
+        Each project represents a real engineering problem.
+      </p>
+    </div>
+  </div>
+  <ProjectList showExperiments={true} />
+</BaseLayout>
+
+<style>
+  .work-page-header {
+    padding-bottom: 0;
+  }
+
+  .work-page-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .work-page-desc {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 45ch;
+    line-height: 1.7;
+  }
+</style>

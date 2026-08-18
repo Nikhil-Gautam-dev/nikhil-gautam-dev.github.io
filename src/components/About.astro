@@ -1,0 +1,143 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section class="section-py" aria-labelledby="about-heading" id="about">
+  <div class="container">
+    <SectionHeading
+      id="about-heading"
+      label="About"
+    />
+
+    <div class="about-grid">
+      <div class="about-body">
+        <p>
+          I'm Nikhil — a backend engineer interested in building systems that
+          hold up under real conditions. I don't chase frameworks; I try to
+          understand the problems they exist to solve.
+        </p>
+        <p>
+          I primarily work with TypeScript and Node.js, building APIs and
+          backend services on top of MongoDB, PostgreSQL, and Redis. I've spent
+          time thinking about authentication infrastructure, transactional
+          correctness, async processing patterns, and how services should talk
+          to each other.
+        </p>
+        <p>
+          Right now, I'm deepening my understanding of distributed systems,
+          service boundaries, and infrastructure — the kinds of decisions that
+          determine how well a system survives at scale or under load.
+        </p>
+        <p>
+          Outside of backend work, I experiment with hardware (ESP32),
+          contribute small developer tools, and occasionally explore what it
+          means to build well-designed developer experiences.
+        </p>
+      </div>
+
+      <aside class="about-sidebar" aria-label="Quick facts">
+        <div class="sidebar-section">
+          <h3 class="sidebar-label">Currently</h3>
+          <p class="sidebar-value">Backend Engineering at Medoc Health IT</p>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-label">Interested in</h3>
+          <ul class="sidebar-list">
+            <li>Distributed systems</li>
+            <li>Authentication infrastructure</li>
+            <li>Database internals</li>
+            <li>Backend architecture</li>
+          </ul>
+        </div>
+        <div class="sidebar-section">
+          <h3 class="sidebar-label">Learning</h3>
+          <ul class="sidebar-list">
+            <li>System design patterns</li>
+            <li>Infrastructure tooling</li>
+            <li>Performance engineering</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .about-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .about-body p {
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 58ch;
+  }
+
+  /* Sidebar */
+  .about-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-top: 0.2rem;
+  }
+
+  .sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .sidebar-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .sidebar-value {
+    font-size: 0.88rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .sidebar-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .sidebar-list li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding-left: 0.75rem;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .sidebar-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--bg-border);
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

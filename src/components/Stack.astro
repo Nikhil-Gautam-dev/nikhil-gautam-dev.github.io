@@ -1,0 +1,98 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const stackGroups = [
+  {
+    group: 'Languages',
+    items: ['TypeScript', 'JavaScript', 'Python', 'Java', 'C++'],
+  },
+  {
+    group: 'Backend',
+    items: ['Node.js', 'Express', 'NestJS', 'REST APIs'],
+  },
+  {
+    group: 'Databases',
+    items: ['MongoDB', 'PostgreSQL', 'Redis'],
+  },
+  {
+    group: 'Messaging',
+    items: ['RabbitMQ'],
+  },
+  {
+    group: 'Infrastructure',
+    items: ['Docker', 'GitHub Actions', 'Jenkins'],
+  },
+  {
+    group: 'Other',
+    items: ['JWT', 'JWKS', 'Prisma', 'Git'],
+  },
+] as const;
+---
+
+<section class="section-py" aria-labelledby="stack-heading" id="stack">
+  <div class="container">
+    <SectionHeading
+      id="stack-heading"
+      label="Technologies"
+      description="Tools and systems I work with. No percentage bars — just the actual stack."
+    />
+
+    <div class="stack-grid" role="list">
+      {stackGroups.map((group) => (
+        <div class="stack-group" role="listitem">
+          <h3 class="stack-group-label">{group.group}</h3>
+          <ul class="stack-items" role="list">
+            {group.items.map((item) => (
+              <li class="stack-item">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .stack-group-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .stack-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stack-item {
+    font-size: 0.9rem;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.4;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .stack-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  @media (max-width: 480px) {
+    .stack-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+</style>

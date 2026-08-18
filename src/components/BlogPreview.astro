@@ -1,0 +1,181 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from './SectionHeading.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const latestPosts = allPosts
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const hasNoPosts = latestPosts.length === 0;
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  }).toUpperCase();
+}
+---
+
+<section class="section-py" aria-labelledby="blog-heading" id="writing">
+  <div class="container">
+    <SectionHeading
+      id="blog-heading"
+      label="Latest Writing"
+      description="Technical writing on backend systems, databases, and engineering decisions."
+    />
+
+    {hasNoPosts ? (
+      <div class="blog-empty" role="status" aria-live="polite">
+        <p class="blog-empty-text">No articles published yet.</p>
+        <p class="blog-empty-sub">Check back soon — writing is coming.</p>
+      </div>
+    ) : (
+      <div class="blog-list" role="list">
+        {latestPosts.map((post) => (
+          <article class="blog-item" role="listitem">
+            <a href={`/blog/${post.slug}`} class="blog-item-link" aria-label={`Read: ${post.data.title}`}>
+              <div class="blog-item-content">
+                <h3 class="blog-item-title">{post.data.title}</h3>
+                <div class="blog-item-meta">
+                  <span class="label">{post.data.category}</span>
+                  <span class="meta-sep" aria-hidden="true">·</span>
+                  <span class="label">{formatDate(post.data.date)}</span>
+                  {post.data.readingTime && (
+                    <>
+                      <span class="meta-sep" aria-hidden="true">·</span>
+                      <span class="label">{post.data.readingTime} min read</span>
+                    </>
+                  )}
+                </div>
+                {post.data.description && (
+                  <p class="blog-item-desc">{post.data.description}</p>
+                )}
+              </div>
+              <span class="blog-item-arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
+
+    <div class="blog-footer">
+      <a href="/blog" class="link-arrow">
+        View all articles <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Empty state */
+  .blog-empty {
+    padding: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-top: 1px solid var(--bg-border);
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .blog-empty-text {
+    font-size: 0.95rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .blog-empty-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* Blog list */
+  .blog-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-item {
+    border-top: 1px solid var(--bg-border);
+  }
+
+  .blog-item:last-child {
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .blog-item-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    text-decoration: none;
+    transition: background 0.2s ease, padding 0.2s ease;
+  }
+
+  .blog-item:hover .blog-item-link {
+    background: var(--bg-surface);
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    margin: 0 -0.6rem;
+  }
+
+  .blog-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .blog-item-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+  }
+
+  .blog-item:hover .blog-item-title {
+    color: var(--accent);
+  }
+
+  .blog-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-sep {
+    color: var(--bg-border);
+    font-size: 0.6rem;
+  }
+
+  .blog-item-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 60ch;
+    margin-top: 0.2rem;
+  }
+
+  .blog-item-arrow {
+    font-size: 0.9rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  }
+
+  .blog-item:hover .blog-item-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--accent);
+  }
+
+  /* Footer */
+  .blog-footer {
+    margin-top: 2rem;
+  }
+</style>

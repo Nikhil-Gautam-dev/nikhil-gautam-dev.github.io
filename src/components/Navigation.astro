@@ -1,0 +1,381 @@
+---
+import { site } from '../data/site';
+
+const navLinks = [
+  { label: 'Work', href: '/work' },
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<!-- Nav header sits in its own stacking context -->
+<header class="nav-header" role="banner">
+  <nav class="container nav-inner" aria-label="Main navigation">
+    <!-- Logo -->
+    <a href="/" class="nav-logo" aria-label={`${site.name} — Home`}>
+      <span class="nav-initials" aria-hidden="true">NG</span>
+      <span class="nav-name">{site.name}</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="nav-links" role="list">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class={`nav-link ${isActive(link.href) ? 'nav-link--active' : ''}`}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Mobile menu button -->
+    <button
+      id="menu-toggle"
+      class="nav-menu-btn"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open navigation menu"
+    >
+      <span class="menu-label">Menu</span>
+      <span class="menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+  </nav>
+</header>
+
+<!--
+  Mobile menu is a SIBLING of the header, NOT a child.
+  This is critical: backdrop-filter on the header creates a stacking context
+  that would trap a child fixed element. As a sibling with its own z-index it
+  correctly covers everything including the header.
+-->
+<div
+  id="mobile-menu"
+  class="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+  hidden
+>
+  <div class="mobile-menu-inner">
+    <ul class="mobile-nav-links" role="list">
+      {navLinks.map((link, i) => (
+        <li>
+          <a
+            href={link.href}
+            class={`mobile-nav-link ${isActive(link.href) ? 'mobile-nav-link--active' : ''}`}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+            style={`--i: ${i}`}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="mobile-menu-footer">
+      <a href={`mailto:${site.email}`} class="mobile-social-link">Email</a>
+      <a href={site.github} class="mobile-social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href={site.linkedin} class="mobile-social-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const toggle = document.getElementById('menu-toggle') as HTMLButtonElement;
+  const menu = document.getElementById('mobile-menu') as HTMLDivElement;
+
+  function openMenu() {
+    menu.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', 'Close navigation menu');
+    document.body.style.overflow = 'hidden';
+    // One frame delay so transition fires after display change
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        menu.classList.add('is-open');
+      });
+    });
+  }
+
+  function closeMenu() {
+    menu.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open navigation menu');
+    document.body.style.overflow = '';
+    menu.addEventListener('transitionend', () => {
+      if (!menu.classList.contains('is-open')) {
+        menu.hidden = true;
+      }
+    }, { once: true });
+  }
+
+  toggle.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    isOpen ? closeMenu() : openMenu();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+      toggle.focus();
+    }
+  });
+
+  menu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+</script>
+
+<style>
+  .nav-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(249, 247, 244, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 2rem;
+  }
+
+  /* Logo */
+  .nav-logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nav-initials {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    line-height: 1;
+    transition: color 0.2s ease;
+  }
+
+  .nav-logo:hover .nav-initials {
+    color: var(--accent);
+  }
+
+  .nav-name {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.2s ease;
+  }
+
+  .nav-logo:hover .nav-name {
+    color: var(--ink);
+  }
+
+  /* Desktop links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-link {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--accent);
+    transition: width 0.25s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-link:hover::after,
+  .nav-link--active::after {
+    width: 100%;
+  }
+
+  .nav-link--active {
+    color: var(--ink);
+  }
+
+  /* Mobile button */
+  .nav-menu-btn {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    color: var(--ink);
+  }
+
+  .menu-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 20px;
+  }
+
+  .menu-icon span {
+    display: block;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  /* =====================================================
+     MOBILE MENU OVERLAY
+     Sits outside the header to avoid stacking context
+     created by backdrop-filter on the nav.
+     ===================================================== */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    /* Hard-coded to match --bg token (#F9F7F4) */
+    background-color: #F9F7F4;
+    z-index: 500;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .mobile-menu:not([hidden]) {
+    display: flex;
+  }
+
+  .mobile-menu.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .mobile-menu-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 80px var(--container-px, 1.5rem) 3rem;
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 12vw, 6rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    line-height: 1.1;
+    border-top: 1px solid var(--bg-border);
+    padding: 0.4rem 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: color 0.2s ease, opacity 0.35s ease, transform 0.35s ease;
+    transition-delay: calc(var(--i, 0) * 0.06s);
+  }
+
+  .mobile-nav-link:last-of-type {
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .mobile-menu.is-open .mobile-nav-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link--active {
+    color: var(--accent);
+  }
+
+  .mobile-menu-footer {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .mobile-social-link {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .mobile-social-link:hover {
+    color: var(--accent);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .nav-links {
+      display: none;
+    }
+
+    .nav-menu-btn {
+      display: flex;
+    }
+
+    .nav-name {
+      display: none;
+    }
+  }
+</style>

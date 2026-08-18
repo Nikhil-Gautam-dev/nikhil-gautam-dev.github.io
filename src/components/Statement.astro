@@ -1,0 +1,70 @@
+---
+---
+
+<section class="statement section-py-sm" aria-labelledby="statement-heading">
+  <div class="container">
+    <hr class="divider" />
+    <div class="statement-inner">
+      <h2 class="statement-heading" id="statement-heading">
+        I like building things<br />
+        that are hard to break.
+      </h2>
+      <div class="statement-body">
+        <p>
+          Backend engineering is about more than making code work — it's about
+          designing systems that stay reliable under pressure, scale without
+          accumulating fragility, and remain understandable as they grow.
+        </p>
+        <p>
+          I work across APIs, databases, distributed systems, authentication
+          infrastructure, and backend architecture. I'm interested in the
+          decisions that matter: data consistency, failure modes, service
+          boundaries, and how systems behave at their edges.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .statement {
+    padding-top: clamp(3rem, 6vw, 5rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .statement-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    padding-top: 2rem;
+  }
+
+  .statement-heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  .statement-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 0.5rem;
+  }
+
+  .statement-body p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  @media (max-width: 768px) {
+    .statement-inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

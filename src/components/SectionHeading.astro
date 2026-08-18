@@ -1,0 +1,72 @@
+---
+interface Props {
+  number?: string;
+  label: string;
+  description?: string;
+  id?: string;
+}
+
+const { number, label, description, id } = Astro.props;
+---
+
+<div class="section-heading-wrapper" {id}>
+  <hr class="divider section-divider" />
+  <div class="section-heading-inner">
+    {number && (
+      <span class="section-number" aria-hidden="true">{number}</span>
+    )}
+    <div class="section-heading-content">
+      <h2 class="section-title">{label}</h2>
+      {description && (
+        <p class="section-description">{description}</p>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-heading-wrapper {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .section-divider {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-heading-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .section-number {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    padding-top: 0.4rem;
+    flex-shrink: 0;
+    min-width: 2rem;
+  }
+
+  .section-heading-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .section-description {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 50ch;
+    line-height: 1.6;
+  }
+</style>

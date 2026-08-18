@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import About from '../components/About.astro';
+import Stack from '../components/Stack.astro';
+import Interests from '../components/Interests.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${site.name} — backend engineer focused on reliable systems, scalable APIs, and backend infrastructure.`}
+>
+  <div class="about-page-header section-py-sm">
+    <div class="container">
+      <p class="label label-accent">About</p>
+      <h1 class="about-page-title">Nikhil<br />Gautam</h1>
+    </div>
+  </div>
+  <About />
+  <Stack />
+  <Interests />
+</BaseLayout>
+
+<style>
+  .about-page-header {
+    padding-bottom: 0;
+  }
+
+  .about-page-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+    margin-top: 0.75rem;
+  }
+</style>

@@ -1,0 +1,149 @@
+---
+import { experiences } from '../data/experience';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section class="section-py" aria-labelledby="experience-heading" id="experience">
+  <div class="container">
+    <SectionHeading
+      id="experience-heading"
+      label="Experience"
+    />
+
+    <div class="experience-list" role="list">
+      {experiences.map((exp, index) => (
+        <article class="experience-item" role="listitem" aria-label={`${exp.role} at ${exp.company}`}>
+          <div class="exp-meta">
+            <span class="exp-period label">{exp.period}</span>
+          </div>
+          <div class="exp-content">
+            <h3 class="exp-company">{exp.company}</h3>
+            <p class="exp-role label" style="color: var(--accent);">{exp.role}</p>
+            <p class="exp-description">{exp.description}</p>
+            <ul class="exp-responsibilities" aria-label="Key responsibilities">
+              {exp.responsibilities.map((r) => (
+                <li class="exp-responsibility">{r}</li>
+              ))}
+            </ul>
+            <div class="exp-stack" aria-label="Technologies">
+              {exp.stack.map((tech) => (
+                <span class="exp-tech">{tech}</span>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .experience-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--bg-border);
+  }
+
+  .experience-item:last-child {
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .exp-period {
+    padding-top: 0.3rem;
+    display: block;
+    white-space: nowrap;
+  }
+
+  .exp-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .exp-company {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.1rem;
+  }
+
+  .exp-role {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .exp-description {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 55ch;
+    margin-top: 0.4rem;
+  }
+
+  .exp-responsibilities {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+  }
+
+  .exp-responsibility {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .exp-responsibility::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--bg-border);
+  }
+
+  .exp-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.8rem;
+    margin-top: 0.75rem;
+  }
+
+  .exp-tech {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .exp-tech:not(:last-child)::after {
+    content: '·';
+    margin-left: 0.8rem;
+    color: var(--bg-border);
+  }
+
+  @media (max-width: 640px) {
+    .experience-item {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .exp-period {
+      padding-top: 0;
+    }
+  }
+</style>

@@ -1,0 +1,272 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ===================================================== */
+:root {
+  --bg: #F9F7F4;
+  --bg-surface: #F2EFE9;
+  --bg-border: #E0DDD8;
+  --ink: #111110;
+  --muted: #6B6B68;
+  --accent: #E05C00;
+  --accent-light: #FF7A2F;
+
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --container-width: 1240px;
+  --container-px: clamp(1.5rem, 5vw, 4rem);
+  --section-py: clamp(5rem, 10vw, 9rem);
+  --section-py-sm: clamp(3rem, 6vw, 5rem);
+}
+
+/* =====================================================
+   REDUCED MOTION
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =====================================================
+   BASE RESET & DEFAULTS
+   ===================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+/* =====================================================
+   FOCUS STYLES (Accessibility)
+   ===================================================== */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* =====================================================
+   LAYOUT UTILITIES
+   ===================================================== */
+.container {
+  max-width: var(--container-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-px);
+  padding-right: var(--container-px);
+}
+
+.section-py {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+
+.section-py-sm {
+  padding-top: var(--section-py-sm);
+  padding-bottom: var(--section-py-sm);
+}
+
+/* =====================================================
+   TYPOGRAPHY UTILITIES
+   ===================================================== */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.label-accent {
+  color: var(--accent);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* =====================================================
+   BORDER DIVIDER
+   ===================================================== */
+.divider {
+  border: none;
+  border-top: 1px solid var(--bg-border);
+}
+
+/* =====================================================
+   LINK STYLES
+   ===================================================== */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link-arrow:hover {
+  color: var(--accent);
+}
+
+.link-arrow .arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.link-arrow:hover .arrow {
+  transform: translateX(4px);
+}
+
+.link-external .arrow {
+  transition: transform 0.2s ease;
+}
+
+.link-external:hover .arrow {
+  transform: translate(3px, -3px);
+}
+
+/* =====================================================
+   BUTTON STYLES
+   ===================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.btn-accent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-accent:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn .arrow {
+  transition: transform 0.2s ease;
+}
+
+.btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* =====================================================
+   HERO ANIMATION CLASSES
+   ===================================================== */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+[data-animate].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* =====================================================
+   PROSE STYLES (Blog)
+   ===================================================== */
+.prose {
+  max-width: 65ch;
+  color: var(--ink);
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* =====================================================
+   SCROLLBAR (subtle)
+   ===================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}

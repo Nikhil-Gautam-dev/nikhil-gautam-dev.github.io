@@ -1,0 +1,278 @@
+---
+import { projects } from '../../data/projects';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout
+  title={project.title}
+  description={project.shortDescription}
+>
+  <article class="project-detail section-py">
+    <div class="container">
+
+      <!-- Back link -->
+      <a href="/work" class="back-link" aria-label="Back to all work">
+        <span aria-hidden="true">←</span> Work
+      </a>
+
+      <!-- Header -->
+      <header class="detail-header">
+        <span class="label label-accent">{project.number} / {project.category}</span>
+        <h1 class="detail-title">{project.title}</h1>
+        <p class="detail-subtitle">{project.shortDescription}</p>
+
+        {(project.links?.github || project.links?.live) && (
+          <div class="detail-links" aria-label="Project links">
+            {project.links.github && (
+              <a
+                href={project.links.github}
+                class="btn"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View on GitHub (opens in new tab)"
+              >
+                GitHub <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            )}
+            {project.links.live && (
+              <a
+                href={project.links.live}
+                class="btn btn-accent"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View live project (opens in new tab)"
+              >
+                Live <span class="arrow" aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        )}
+      </header>
+
+      <hr class="divider detail-divider" />
+
+      <!-- Sections -->
+      <div class="detail-sections">
+
+        <section class="detail-section" aria-labelledby="overview-heading">
+          <h2 class="detail-section-label" id="overview-heading">Overview</h2>
+          <div class="detail-section-content">
+            <p>{project.description}</p>
+          </div>
+        </section>
+
+        <section class="detail-section" aria-labelledby="problem-heading">
+          <h2 class="detail-section-label" id="problem-heading">Problem</h2>
+          <div class="detail-section-content">
+            <p>{project.problem}</p>
+          </div>
+        </section>
+
+        <section class="detail-section" aria-labelledby="approach-heading">
+          <h2 class="detail-section-label" id="approach-heading">Approach</h2>
+          <div class="detail-section-content">
+            <p>{project.approach}</p>
+          </div>
+        </section>
+
+        {project.architecture && (
+          <section class="detail-section" aria-labelledby="architecture-heading">
+            <h2 class="detail-section-label" id="architecture-heading">Architecture</h2>
+            <div class="detail-section-content">
+              <pre class="architecture-diagram" aria-label="Architecture diagram">{project.architecture}</pre>
+            </div>
+          </section>
+        )}
+
+        {project.technicalDecisions && (
+          <section class="detail-section" aria-labelledby="decisions-heading">
+            <h2 class="detail-section-label" id="decisions-heading">Technical Decisions</h2>
+            <div class="detail-section-content">
+              <p>{project.technicalDecisions}</p>
+            </div>
+          </section>
+        )}
+
+        {project.challenges && (
+          <section class="detail-section" aria-labelledby="challenges-heading">
+            <h2 class="detail-section-label" id="challenges-heading">Challenges</h2>
+            <div class="detail-section-content">
+              <p>{project.challenges}</p>
+            </div>
+          </section>
+        )}
+
+        <section class="detail-section" aria-labelledby="technologies-heading">
+          <h2 class="detail-section-label" id="technologies-heading">Technologies</h2>
+          <div class="detail-section-content detail-tech">
+            {project.technologies.map((tech) => (
+              <span class="detail-tech-tag">{tech}</span>
+            ))}
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Navigation -->
+      <div class="detail-nav">
+        <a href="/work" class="link-arrow">
+          <span class="arrow" style="transform: scaleX(-1); display: inline-block;" aria-hidden="true">→</span>
+          All projects
+        </a>
+      </div>
+
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail {
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 2.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink);
+  }
+
+  /* Header */
+  .detail-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .detail-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--ink);
+    margin-top: 0.25rem;
+  }
+
+  .detail-subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 55ch;
+    line-height: 1.7;
+  }
+
+  .detail-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .detail-divider {
+    margin-bottom: 3rem;
+  }
+
+  /* Sections */
+  .detail-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .detail-section {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--bg-border);
+  }
+
+  .detail-section:last-child {
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .detail-section-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.2rem;
+  }
+
+  .detail-section-content p {
+    font-size: 0.98rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 60ch;
+  }
+
+  .architecture-diagram {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg-surface);
+    border: 1px solid var(--bg-border);
+    padding: 1.5rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* Technologies */
+  .detail-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .detail-tech-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border: 1.5px solid var(--bg-border);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    transition: border-color 0.2s ease;
+  }
+
+  .detail-tech-tag:hover {
+    border-color: var(--muted);
+  }
+
+  /* Nav */
+  .detail-nav {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bg-border);
+  }
+
+  @media (max-width: 640px) {
+    .detail-section {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+</style>

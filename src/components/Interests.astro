@@ -1,0 +1,82 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const interests = [
+  { number: '01', label: 'Distributed Systems' },
+  { number: '02', label: 'Backend Architecture' },
+  { number: '03', label: 'Authentication & Security' },
+  { number: '04', label: 'Database Design' },
+  { number: '05', label: 'Event-Driven Systems' },
+  { number: '06', label: 'Infrastructure' },
+  { number: '07', label: 'Developer Tools' },
+] as const;
+---
+
+<section class="section-py" aria-labelledby="interests-heading" id="interests">
+  <div class="container">
+    <SectionHeading
+      id="interests-heading"
+      label="Engineering Interests"
+      description="The areas I find most interesting and actively want to go deeper on."
+    />
+
+    <ol class="interests-list" role="list">
+      {interests.map((item) => (
+        <li class="interest-item">
+          <span class="interest-number label label-accent" aria-hidden="true">{item.number}</span>
+          <span class="interest-label">{item.label}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .interests-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0;
+  }
+
+  .interest-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--bg-border);
+    transition: background 0.2s ease;
+  }
+
+  .interest-item:last-child {
+    border-bottom: 1px solid var(--bg-border);
+  }
+
+  .interest-item:hover {
+    padding-left: 0.4rem;
+    background: var(--bg-surface);
+  }
+
+  .interest-number {
+    flex-shrink: 0;
+    min-width: 2rem;
+  }
+
+  .interest-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
+  }
+
+  .interest-item:hover .interest-label {
+    color: var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    .interests-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
