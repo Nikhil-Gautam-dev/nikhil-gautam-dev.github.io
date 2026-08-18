@@ -69,6 +69,7 @@ const detailUrl = `/work/${project.slug}`;
   .project-row {
     position: relative;
     border-top: 1px solid var(--bg-border);
+    cursor: pointer;
   }
 
   .project-row:last-child {
@@ -79,11 +80,13 @@ const detailUrl = `/work/${project.slug}`;
     position: absolute;
     inset: 0;
     z-index: 0;
+    display: block;
   }
 
   .project-row-inner {
     position: relative;
     z-index: 1;
+    pointer-events: none;
     display: grid;
     grid-template-columns: 2.5rem 1fr auto;
     gap: 1.5rem;
@@ -178,8 +181,10 @@ const detailUrl = `/work/${project.slug}`;
 
   /* External links */
   .project-links {
-    padding-top: 0.2rem;
+    position: relative;
     z-index: 2;
+    pointer-events: auto;
+    padding-top: 0.2rem;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -187,6 +192,8 @@ const detailUrl = `/work/${project.slug}`;
   }
 
   .project-ext-link {
+    pointer-events: auto;
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
