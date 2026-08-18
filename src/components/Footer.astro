@@ -1,5 +1,5 @@
 ---
-import { site } from '../data/site';
+import { site } from "../data/site";
 ---
 
 <footer class="site-footer" role="contentinfo">
@@ -57,11 +57,12 @@ import { site } from '../data/site';
 
     <div class="footer-bottom">
       <p class="footer-copy">
-        &copy; {new Date().getFullYear()} {site.name}
+        &copy;{new Date().getFullYear()}
+        {" " + site.name}
       </p>
-      <p class="footer-built">
+      <!-- <p class="footer-built">
         Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="footer-astro-link">Astro</a>
-      </p>
+      </p> -->
     </div>
   </div>
 </footer>
