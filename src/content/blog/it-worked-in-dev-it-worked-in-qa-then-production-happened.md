@@ -8,64 +8,81 @@ draft: false
 readingTime: 5
 ---
 
-In local development and QA environments, everything worked lightning fast. The endpoint returned in 40ms with test data containing 10 appointments and 5 patients.
+It’s interesting how we approach problems at different stages of the software development life cycle.
 
-Then we deployed to production. 
+A few months back at Medoc (where I am currently working as a backend engineer, and since it’s a growing startup, a lot of things are being handled by me), I asked my teammate (a fresher) to write an endpoint for fetching today’s appointments and those that are not completed for a doctor.
 
-Response times spiked to **4,200ms (4.2 seconds)** for doctor dashboard queries.
+It was quite simple because we have a separate collection for appointments with an `eventDate` field, so he just needed to query it based on the current time. But here was the catch: the frontend also required patient details along with the appointments. The patient data is stored in a separate database.
 
-### The Incident: The Silent N+1 Query Trap
+So it became a case of dual database calls, where the first call fetches the appointments and the second call fetches the associated patient details, which is a typical **N+1 query problem**.
 
-When doctors fetched their daily appointments, the backend executed a loop that fetched patient details individually for each appointment:
+---
 
-```javascript
-// BAD: Classical N+1 Database Query Pattern
-const appointments = await AppointmentModel.find({ doctorId });
+## The Initial Implementation
 
-const result = await Promise.all(
-  appointments.map(async (app) => {
-    // ⚠️ Makes a separate database round-trip for every single appointment!
-    const patient = await PatientModel.findById(app.patientId);
-    return { ...app.toObject(), patient };
-  })
-);
-```
+What my teammate did, like most people would, was:
 
-In production, active doctors had hundreds of appointments with thousands of historical records over time. For 100 appointments, this executed **101 separate database queries**. Multiply that by thousands of concurrent requests, and the database connection pool was starved, CPU utilization spiked, and API latencies plummeted.
+1. `fetch appointments`
+2. `loop over each appointment`
+3. `fetch patient details one by one`
 
-### The Fix: In-Memory Map Batching & Field Projections
+And it worked.
 
-Instead of fetching patient details inside a loop, we refactored the logic to fetch all required patient records in a **single batched query** using `$in` and indexed lookups:
+Manual testing passed, it was deployed to dev for QA testing, and that passed too.
 
-```javascript
-// GOOD: Batched Query + In-Memory Hash Map
-const appointments = await AppointmentModel.find({ doctorId }).lean();
+Soon it was deployed to production and worked fine for over two months. Everything seemed sorted.
 
-// 1. Collect unique patient IDs
-const patientIds = [...new Set(appointments.map((a) => a.patientId))];
+---
 
-// 2. Fetch all matching patients in ONE database query with field projection
-const patients = await PatientModel.find(
-  { _id: { $in: patientIds } },
-  { name: 1, phone: 1, email: 1 } // Only fetch required fields
-).lean();
+## Production Happened
 
-// 3. Construct O(1) lookup Map
-const patientMap = new Map(patients.map((p) => [p._id.toString(), p]));
+Then a few days back, I got a complaint from the frontend team that their home screen was getting stuck, and that too for only one doctor, which was strange. A frontend friend and I started debugging it, but here we made a mistake. We were testing in the dev environment and were not able to reproduce the issue.
 
-// 4. Stitch data in memory
-const result = appointments.map((app) => ({
-  ...app,
-  patient: patientMap.get(app.patientId.toString()) || null,
-}));
-```
+We spent almost an hour trying to fix and optimize the UI. Our initial thought was that since it was a home screen, it was hitting too many endpoints while loading the initial data. But we couldn’t find the real culprit.
 
-### Results
-- Database queries reduced from **6,000+ queries** per batch down to **2 queries**.
-- API response time dropped from **4,200ms to 550ms** (an 87% performance boost).
-- Database CPU load dropped by over 60%.
+Then we checked the production data for that doctor. Once we accessed the user account and opened the appointments view, we found the issue.
 
-### Key Takeaways
-1. **Never test with toy datasets alone**: Always seed dev/QA with realistic production volume data.
-2. **Beware of loop-based DB calls**: Look for `map(async ...)` or nested queries — batch lookups using `$in` / SQL `IN (...)` whenever possible.
-3. **Use projections**: Don't load full heavy documents when you only need `name` and `email`.
+This particular doctor had **6,000+ appointments**, which is a lot for a startup, and he had marked only a very small number as completed, so the incoming data was huge.
+
+---
+
+## Pinpointing the Culprit
+
+I immediately started pinpointing the API responsible for fetching these appointments. As soon as I looked at its implementation, the problem became clear.
+
+It was making **6,000+ database calls** to retrieve patient data. That’s why the response time was around **4 seconds**, which was never caught during initial testing because we never tested with this much data.
+
+---
+
+## The Refactoring & Optimization
+
+I immediately refactored the code using in-memory maps (feel free to comment if you have a better approach).
+
+The implementation was simple:
+
+1. `first, fetch all required appointments`
+2. `then create an array of patient IDs`
+3. `fetch all patient details in a single database call`
+4. `create a map with patient ID as the key and patient details as the value`
+5. `loop over the appointments again to construct the DTO`
+
+I also optimized a few things. This route was over-fetching data, so I added proper projections and fetched only the required fields. This reduced the payload size as well.
+
+After this, the latency came down to **500–600 ms**, which was a huge difference.
+
+---
+
+## Now Comes the Real Lesson
+
+The fault was not just the developer’s. It was also:
+
+- **me**, for merging the PR without a deep review and not clarifying constraints
+- **the tester**, who tested only in a controlled environment
+- **the developer**, who didn’t think about edge cases or ask for clarity
+
+But I believe these kinds of unexpected production issues are what make developers grow and face the real horror of production.
+
+> While writing code, always expect the worst and hope for the best.
+>
+> — *Nikhil*
+
