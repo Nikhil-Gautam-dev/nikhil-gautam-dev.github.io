@@ -393,4 +393,4 @@ And that was a good reminder that when debugging authentication, don't just ask 
 
 Ask whether it actually made it to the server.
 
-— Nikhil
+— _Nikhil Gautam_

@@ -34,4 +34,4 @@ That’s when reality hit.
 
 I didn’t know any code.
 
-*To be continued…*
+_To be continued…_

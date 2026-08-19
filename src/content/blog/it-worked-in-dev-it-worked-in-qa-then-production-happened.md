@@ -84,5 +84,4 @@ But I believe these kinds of unexpected production issues are what make develope
 
 > While writing code, always expect the worst and hope for the best.
 >
-> — *Nikhil*
-
+> — _Nikhil_

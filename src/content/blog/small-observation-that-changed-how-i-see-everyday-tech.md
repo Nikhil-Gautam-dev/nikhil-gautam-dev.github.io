@@ -43,7 +43,7 @@ const secretKey = 123456;
 Next, we need the current time window step for time bounding. For this, we use the current UNIX time and divide it by 30. A shorter interval means shorter expiry and higher security:
 
 ```javascript
-function getTimeWindow(interval) {  
+function getTimeWindow(interval) {
   return Math.floor(Date.now() / 1000 / interval);
 }
 ```
@@ -79,5 +79,4 @@ In production systems, complex cryptographic hash functions are used to generate
 
 What I learned is that some everyday technologies we use without a second thought are actually worth paying attention to. Every time I dig into something that looks simple on the surface, I find that underneath it has an amazingly well-thought-out implementation that always amazes me.
 
-— *Nikhil*
-
+— _Nikhil_
