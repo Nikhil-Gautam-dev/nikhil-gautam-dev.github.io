@@ -6,6 +6,7 @@ category: "Security"
 tags: ["authentication", "cookies", "jwt", "backend", "security", "web-dev"]
 draft: false
 readingTime: 6
+coverImage: "/blog/refresh-thumbnail.png"
 ---
 
 Sometimes an issue looks like an authentication problem, but the actual problem is somewhere completely different.
