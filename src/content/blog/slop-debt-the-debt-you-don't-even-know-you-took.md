@@ -16,7 +16,7 @@ readingTime: 5
 coverImage: "/blog/slop-debt-thumbnail.png"
 ---
 
-I recently read an article around a new term called **"slop debt"**, and I found it interesting because before understanding slop debt, I think we first need to understand what technical debt actually is.
+I recently read [an article](https://arpitbhayani.me/blogs/slop-debt) around a new term called **"slop debt"**, and I found it interesting because before understanding slop debt, I think we first need to understand what technical debt actually is.
 
 So, what is technical debt?
 
