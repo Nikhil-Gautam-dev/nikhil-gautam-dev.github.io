@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site } from "../../data/site";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -24,7 +25,11 @@ function formatDate(date: Date): string {
 }
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={post.data.coverImage ? `${site.url}${post.data.coverImage}` : undefined}
+>
   <article class="post-container section-py">
     <div class="container">
       <div class="post-header">
