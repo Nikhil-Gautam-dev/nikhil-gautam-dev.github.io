@@ -2,14 +2,13 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 
+import sitemap from '@astrojs/sitemap';
+
 export default defineConfig({
   site: 'https://nikhil-gautam-dev.github.io',
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    mdx(),
-  ],
+  integrations: [tailwind({
+    applyBaseStyles: false,
+  }), mdx(), sitemap()],
   markdown: {
     shikiConfig: {
       theme: 'github-dark-dimmed',
