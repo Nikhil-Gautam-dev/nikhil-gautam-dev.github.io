@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 function formatDate(date: Date): string {
   return date
@@ -23,75 +23,179 @@ function formatDate(date: Date): string {
     })
     .toUpperCase();
 }
+
+// Filter main section headings (H2) for Table of Contents, capped at 6 items
+const tocHeadings = headings.filter((h) => h.depth === 2).slice(0, 6);
+
+// Show TOC if post has at least 3 main sections
+const showToc = tocHeadings.length >= 3;
 ---
 
 <BaseLayout
   title={post.data.title}
   description={post.data.description}
-  ogImage={post.data.coverImage ? `${site.url}${post.data.coverImage}` : undefined}
+  ogImage={post.data.coverImage
+    ? `${site.url}${post.data.coverImage}`
+    : undefined}
 >
   <article class="post-container section-py">
     <div class="container">
-      <div class="post-header">
-        <a href="/blog" class="back-link">← Back to writing</a>
-        <div class="post-meta">
-          <span class="label label-accent">{post.data.category}</span>
-          <span class="meta-sep">·</span>
-          <span class="label">{formatDate(post.data.date)}</span>
+      <div class="post-layout">
+        <!-- Main Post Content Column -->
+        <div class="post-main">
+          <div class="post-header">
+            <a href="/blog" class="back-link">← Back to writing</a>
+            <div class="post-meta">
+              <span class="label label-accent">{post.data.category}</span>
+              <span class="meta-sep">·</span>
+              <span class="label">{formatDate(post.data.date)}</span>
+              {
+                post.data.readingTime && (
+                  <>
+                    <span class="meta-sep">·</span>
+                    <span class="label">{post.data.readingTime} min read</span>
+                  </>
+                )
+              }
+            </div>
+            <h1 class="post-title">{post.data.title}</h1>
+            {
+              post.data.description && (
+                <p class="post-desc">{post.data.description}</p>
+              )
+            }
+            {
+              post.data.tags && post.data.tags.length > 0 && (
+                <div class="post-tags">
+                  {post.data.tags.map((tag: string) => (
+                    <span class="blog-tag">{tag}</span>
+                  ))}
+                </div>
+              )
+            }
+          </div>
+
           {
-            post.data.readingTime && (
-              <>
-                <span class="meta-sep">·</span>
-                <span class="label">{post.data.readingTime} min read</span>
-              </>
+            post.data.coverImage && (
+              <div class="post-cover">
+                <img
+                  src={post.data.coverImage}
+                  alt={`Cover image for ${post.data.title}`}
+                  class="post-cover-img"
+                  loading="eager"
+                />
+              </div>
             )
           }
-        </div>
-        <h1 class="post-title">{post.data.title}</h1>
-        {
-          post.data.description && (
-            <p class="post-desc">{post.data.description}</p>
-          )
-        }
-        {
-          post.data.tags && post.data.tags.length > 0 && (
-            <div class="post-tags">
-              {post.data.tags.map((tag: string) => (
-                <span class="blog-tag">{tag}</span>
-              ))}
-            </div>
-          )
-        }
-      </div>
 
-      {
-        post.data.coverImage && (
-          <div class="post-cover">
-            <img
-              src={post.data.coverImage}
-              alt={`Cover image for ${post.data.title}`}
-              class="post-cover-img"
-              loading="eager"
-            />
+          <div class="post-content prose">
+            <Content />
           </div>
-        )
-      }
 
-      <div class="post-content prose">
-        <Content />
-      </div>
+          <div class="post-footer">
+            <a href="/blog" class="link-arrow">← Back to all articles</a>
+          </div>
+        </div>
 
-      <div class="post-footer">
-        <a href="/blog" class="link-arrow">← Back to all articles</a>
+        <!-- Right-side Sticky Index / Table of Contents -->
+        {
+          showToc && (
+            <aside class="post-toc-aside" aria-label="Table of contents">
+              <div class="toc-sticky-container">
+                <div class="toc-header">
+                  <span class="label">ON THIS PAGE</span>
+                </div>
+                <nav class="toc-nav">
+                  <ul class="toc-list">
+                    {tocHeadings.map((heading) => (
+                      <li class={`toc-item depth-${heading.depth}`}>
+                        <a
+                          href={`#${heading.slug}`}
+                          class="toc-link"
+                          data-toc-slug={heading.slug}
+                        >
+                          {heading.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </aside>
+          )
+        }
       </div>
     </div>
   </article>
 </BaseLayout>
 
+<script>
+  function initTocObserver() {
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
+    if (!tocLinks.length) return;
+
+    const headingMap = new Map<Element, HTMLAnchorElement>();
+    tocLinks.forEach((link) => {
+      const slug = link.getAttribute("data-toc-slug");
+      if (slug) {
+        const el = document.getElementById(slug);
+        if (el) headingMap.set(el, link);
+      }
+    });
+
+    if (!headingMap.size) return;
+
+    let currentActiveLink: HTMLAnchorElement | null = null;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const link = headingMap.get(entry.target);
+            if (link) {
+              if (currentActiveLink && currentActiveLink !== link) {
+                currentActiveLink.classList.remove("active");
+              }
+              link.classList.add("active");
+              currentActiveLink = link;
+            }
+          }
+        });
+      },
+      {
+        rootMargin: "-90px 0px -65% 0px",
+        threshold: 0,
+      },
+    );
+
+    headingMap.forEach((_, el) => observer.observe(el));
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTocObserver);
+  } else {
+    initTocObserver();
+  }
+</script>
+
 <style>
+  .post-layout {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  .post-main {
+    flex: 1;
+    min-width: 0;
+    max-width: 68ch;
+  }
+
   .post-header {
     margin-bottom: 3rem;
-    max-width: 68ch;
   }
 
   .back-link {
@@ -190,6 +294,7 @@ function formatDate(date: Date): string {
     margin-bottom: 1rem;
     color: var(--ink);
     letter-spacing: -0.02em;
+    scroll-margin-top: 5rem;
   }
 
   .post-content :global(h3) {
@@ -198,6 +303,7 @@ function formatDate(date: Date): string {
     margin-top: 2rem;
     margin-bottom: 0.75rem;
     color: var(--ink);
+    scroll-margin-top: 5rem;
   }
 
   .post-content :global(blockquote) {
@@ -272,5 +378,75 @@ function formatDate(date: Date): string {
     margin-top: 4rem;
     padding-top: 2rem;
     border-top: 1px solid var(--bg-border);
+  }
+
+  /* Table of Contents Sidebar */
+  .post-toc-aside {
+    display: none;
+  }
+
+  @media (min-width: 860px) {
+    .post-toc-aside {
+      display: block;
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 5.5rem;
+      align-self: flex-start;
+      max-height: calc(100vh - 7rem);
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .toc-sticky-container {
+      padding-left: 1.25rem;
+      border-left: 1px solid var(--bg-border);
+    }
+
+    .toc-header {
+      margin-bottom: 0.75rem;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .toc-item.depth-3 {
+      padding-left: 0.75rem;
+    }
+
+    .toc-link {
+      display: block;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: var(--muted);
+      text-decoration: none;
+      transition:
+        color 0.15s ease,
+        font-weight 0.15s ease;
+    }
+
+    .toc-link:hover {
+      color: var(--ink);
+    }
+
+    .toc-link:global(.active) {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .post-toc-aside::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .post-toc-aside::-webkit-scrollbar-thumb {
+      background: var(--bg-border);
+      border-radius: 2px;
+    }
   }
 </style>
