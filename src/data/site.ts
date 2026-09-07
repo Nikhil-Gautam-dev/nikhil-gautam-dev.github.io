@@ -8,7 +8,7 @@ export const site = {
     "Nikhil Gautam is a Backend Engineer who builds reliable backend systems, scalable APIs, and backend infrastructure — with a deep interest in distributed systems, authentication, and database design.",
   email: "malhotranikhil863@gmail.com", // ← REPLACE before going live
   github: "https://github.com/nikhil-gautam-dev",
-  linkedin: "https://linkedin.com/in/your-profile", // ← REPLACE before going live
+  linkedin: "https://www.linkedin.com/in/nikhil-malhotra-80a344218/", // ← REPLACE before going live
   url: "https://nikhil-gautam-dev.github.io",
 } as const;
 
