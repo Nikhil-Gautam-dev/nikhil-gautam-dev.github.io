@@ -6,10 +6,14 @@ export const site = {
     "I build backend systems, APIs, and products with a focus on reliability, scalability, and clean architecture.",
   description:
     "Nikhil Gautam is a Backend Engineer who builds reliable backend systems, scalable APIs, and backend infrastructure — with a deep interest in distributed systems, authentication, and database design.",
-  email: "malhotranikhil863@gmail.com", // ← REPLACE before going live
+  email: "malhotranikhil863@gmail.com",
   github: "https://github.com/nikhil-gautam-dev",
-  linkedin: "https://www.linkedin.com/in/nikhil-malhotra-80a344218/", // ← REPLACE before going live
+  linkedin: "https://www.linkedin.com/in/nikhil-malhotra-80a344218/",
   url: "https://nikhil-gautam-dev.github.io",
+  status: {
+    label: "Currently learning",
+    value: "Distributed Systems",
+  },
 } as const;
 
 export type Site = typeof site;

@@ -17,6 +17,13 @@ import profileImage from "../assets/profile-img.png";
         <span>Problem Solver</span>
       </p>
 
+      <!-- Live status badge -->
+      <div class="hero-status" data-hero="status" aria-label={`${site.status.label}: ${site.status.value}`}>
+        <span class="hero-status-dot" aria-hidden="true"></span>
+        <span class="hero-status-label">{site.status.label}:</span>
+        <span class="hero-status-value">{site.status.value}</span>
+      </div>
+
       <!-- Name -->
       <h1 class="hero-name" aria-label="Nikhil Gautam">
         <span class="hero-firstname" data-hero="first">NIKHIL</span>
@@ -87,6 +94,7 @@ import profileImage from "../assets/profile-img.png";
     const elements = document.querySelectorAll<HTMLElement>("[data-hero]");
     const delays: Record<string, number> = {
       label: 0,
+      status: 80,
       first: 150,
       last: 280,
       tagline: 460,
@@ -154,6 +162,45 @@ import profileImage from "../assets/profile-img.png";
 
   .hero-label-sep {
     color: var(--bg-border);
+  }
+
+  /* Status badge */
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--bg-surface);
+    border: 1px solid var(--bg-border);
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+    width: fit-content;
+  }
+
+  .hero-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+  }
+
+  .hero-status-label {
+    color: var(--muted);
+  }
+
+  .hero-status-value {
+    color: var(--ink);
   }
 
   /* Name */

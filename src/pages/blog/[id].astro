@@ -38,6 +38,18 @@ const showToc = tocHeadings.length >= 3;
     ? `${site.url}${post.data.coverImage}`
     : undefined}
 >
+  <!-- Reading progress bar -->
+  <div
+    id="reading-progress"
+    class="reading-progress"
+    role="progressbar"
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-valuenow={0}
+    aria-label="Reading progress"
+  >
+  </div>
+
   <article class="post-container section-py">
     <div class="container">
       <div class="post-layout">
@@ -130,6 +142,47 @@ const showToc = tocHeadings.length >= 3;
 </BaseLayout>
 
 <script>
+  // Reading progress bar
+  function initReadingProgress() {
+    const bar = document.getElementById(
+      "reading-progress",
+    ) as HTMLElement | null;
+    if (!bar || bar == null) return;
+
+    let ticking = false;
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const progress =
+        docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+      bar!.style.width = `${progress}%`;
+      bar!.setAttribute("aria-valuenow", String(Math.round(progress)));
+      ticking = false;
+    }
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      },
+      { passive: true },
+    );
+
+    updateProgress();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initReadingProgress);
+  } else {
+    initReadingProgress();
+  }
+
+  // TOC observer
   function initTocObserver() {
     const tocLinks = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
     if (!tocLinks.length) return;
@@ -179,6 +232,20 @@ const showToc = tocHeadings.length >= 3;
 </script>
 
 <style>
+  /* Reading progress bar */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--accent);
+    z-index: 1000;
+    transition: width 0.05s linear;
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);
+    pointer-events: none;
+  }
+
   .post-layout {
     display: flex;
     gap: 3rem;
