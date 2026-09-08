@@ -1,0 +1,392 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+
+const navLinks = [
+  { label: 'Work', href: '/work', description: 'Selected projects and engineering case studies' },
+  { label: 'Blog', href: '/blog', description: 'Articles on backend architecture & systems' },
+  { label: 'About', href: '/about', description: 'Background, experience & tech stack' },
+  { label: 'Contact', href: '/contact', description: 'Get in touch for opportunities or chat' },
+];
+---
+
+<BaseLayout
+  title="404 — Page Not Found"
+  description="The requested page could not be found."
+  noIndex={true}
+>
+  <section class="error-page section-py">
+    <div class="container">
+      <!-- Top Tag / Status -->
+      <div class="error-badge-wrapper" data-animate>
+        <span class="error-badge">
+          <span class="status-dot" aria-hidden="true"></span>
+          HTTP 404 // RESOURCE_NOT_FOUND
+        </span>
+      </div>
+
+      <!-- Main Heading & Code -->
+      <div class="error-hero" data-animate>
+        <h1 class="error-code">404</h1>
+        <div class="error-heading-content">
+          <h2 class="error-title">Endpoint unreachable.</h2>
+          <p class="error-description">
+            The requested path does not exist, has been relocated, or is currently unhandled by the router.
+          </p>
+        </div>
+      </div>
+
+      <!-- Interactive Diagnostic Terminal Snippet -->
+      <div class="error-terminal" data-animate>
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <span class="terminal-title">system_diagnostics.log</span>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line">
+            <span class="term-prompt">$</span>
+            <span class="term-cmd">curl -i <span id="requested-url">https://nikhilgautam.dev/requested-page</span></span>
+          </div>
+          <div class="terminal-line term-response">
+            <span class="term-status">HTTP/1.1 404 Not Found</span>
+          </div>
+          <div class="terminal-line term-meta">
+            <span>Server: astro/static-edge</span>
+            <span>Content-Type: text/html</span>
+          </div>
+          <div class="terminal-line term-msg">
+            <span class="term-error">[ERR_ROUTE_NOT_FOUND]</span> Stack trace: Target route handler returned nil reference.
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="error-actions" data-animate>
+        <a href="/" class="btn btn-accent">
+          Return to Home <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <button id="go-back-btn" class="btn">
+          &larr; Go Back
+        </button>
+      </div>
+
+      <!-- Quick Nav Grid -->
+      <div class="error-nav-section" data-animate>
+        <p class="label label-accent">Suggested Destinations</p>
+        <div class="error-nav-grid">
+          {navLinks.map((link) => (
+            <a href={link.href} class="error-nav-card">
+              <div class="card-header">
+                <span class="card-title">{link.label}</span>
+                <span class="arrow" aria-hidden="true">&rarr;</span>
+              </div>
+              <p class="card-desc">{link.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Update requested URL dynamically in terminal mockup
+  const urlEl = document.getElementById('requested-url');
+  if (urlEl && typeof window !== 'undefined') {
+    urlEl.textContent = window.location.pathname + window.location.search;
+  }
+
+  // Handle Go Back button safely
+  const backBtn = document.getElementById('go-back-btn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
+  }
+
+  // Trigger animations on load
+  document.querySelectorAll('[data-animate]').forEach((el) => {
+    el.classList.add('is-visible');
+  });
+</script>
+
+<style>
+  .error-page {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+  }
+
+  /* Status badge */
+  .error-badge-wrapper {
+    margin-bottom: 1.5rem;
+  }
+
+  .error-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--bg-border);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  /* Hero section */
+  .error-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .error-hero {
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 3rem;
+    }
+  }
+
+  .error-code {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 18vw, 12rem);
+    line-height: 0.85;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0;
+    user-select: none;
+  }
+
+  .error-heading-content {
+    max-width: 520px;
+  }
+
+  .error-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+
+  .error-description {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Terminal Card */
+  .error-terminal {
+    background: #141413;
+    color: #e5e5e0;
+    border: 1px solid #2a2a28;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    max-width: 720px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  .terminal-header {
+    background: #1e1e1c;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2a2a28;
+    position: relative;
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot-red { background-color: #ff5f56; }
+  .dot-yellow { background-color: #ffbd2e; }
+  .dot-green { background-color: #27c93f; }
+
+  .terminal-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.725rem;
+    color: #888880;
+    letter-spacing: 0.05em;
+  }
+
+  .terminal-body {
+    padding: 1.25rem 1.25rem;
+    font-size: 0.825rem;
+    line-height: 1.7;
+  }
+
+  .terminal-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .term-prompt {
+    color: var(--accent-light);
+    font-weight: bold;
+  }
+
+  .term-cmd {
+    color: #f5f5f0;
+  }
+
+  #requested-url {
+    color: #ffd080;
+    word-break: break-all;
+  }
+
+  .term-response {
+    margin-top: 0.35rem;
+  }
+
+  .term-status {
+    color: #ff6b6b;
+    font-weight: 600;
+  }
+
+  .term-meta {
+    color: #777770;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.775rem;
+  }
+
+  .term-msg {
+    margin-top: 0.35rem;
+    color: #a0a098;
+  }
+
+  .term-error {
+    color: #ff9999;
+    font-weight: 500;
+  }
+
+  /* Actions */
+  .error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  /* Nav Section */
+  .error-nav-section {
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--bg-border);
+  }
+
+  .error-nav-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .error-nav-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .error-nav-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .error-nav-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--bg-border);
+    padding: 1.25rem;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .error-nav-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+
+  .error-nav-card:hover .card-title {
+    color: var(--accent);
+  }
+
+  .card-header .arrow {
+    font-size: 1rem;
+    color: var(--muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .error-nav-card:hover .card-header .arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  .card-desc {
+    font-size: 0.775rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+</style>
