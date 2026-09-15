@@ -4,6 +4,9 @@ import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import { site } from "../data/site";
 
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+
 interface Props {
   title: string;
   description?: string;
@@ -77,5 +80,100 @@ const fullTitle =
       <slot />
     </main>
     <Footer />
+
+    {/* Analytics tracking snippet — fires to Supabase with anon key (INSERT-only RLS) */}
+    {SUPABASE_URL && SUPABASE_ANON_KEY && (
+      <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+        (function () {
+          'use strict';
+
+          // Skip bots and crawlers
+          const ua = navigator.userAgent || '';
+          if (/bot|crawl|spider|prerender|headless/i.test(ua)) return;
+
+          const ENDPOINT = SUPABASE_URL + '/rest/v1/page_events';
+          const HEADERS = {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+            'Prefer': 'return=minimal',
+          };
+
+          /** Derive page category from pathname */
+          function getCategory(path) {
+            if (path === '/' || path === '') return 'home';
+            if (path.startsWith('/blog')) return 'blog';
+            if (path.startsWith('/work')) return 'project';
+            if (path.startsWith('/about')) return 'about';
+            if (path.startsWith('/contact')) return 'contact';
+            return 'other';
+          }
+
+          /** Send event to Supabase */
+          function track(payload) {
+            if (!navigator.sendBeacon) {
+              fetch(ENDPOINT, { method: 'POST', headers: HEADERS, body: JSON.stringify(payload), keepalive: true });
+              return;
+            }
+            const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+            // sendBeacon doesn't support custom headers, so use fetch with keepalive
+            fetch(ENDPOINT, { method: 'POST', headers: HEADERS, body: JSON.stringify(payload), keepalive: true });
+          }
+
+          // ---- Page view ----
+          const path = window.location.pathname;
+          const pageStart = Date.now();
+
+          track({
+            event_type: 'page_view',
+            page: path,
+            category: getCategory(path),
+            referrer: document.referrer || null,
+            user_agent: ua.substring(0, 255),
+          });
+
+          // ---- Duration (on page unload) ----
+          window.addEventListener('pagehide', function () {
+            const duration_ms = Date.now() - pageStart;
+            track({
+              event_type: 'page_view',
+              page: path,
+              category: getCategory(path),
+              duration_ms: duration_ms,
+              label: 'duration_update',
+            });
+          });
+
+          // ---- Outbound link clicks ----
+          document.addEventListener('click', function (e) {
+            const anchor = e.target.closest('a[href]');
+            if (!anchor) return;
+            const href = anchor.getAttribute('href') || '';
+            // External link = starts with http and NOT our own domain
+            if (/^https?:\/\//.test(href) && !href.includes('nikhil-gautam-dev.github.io')) {
+              track({
+                event_type: 'outbound_click',
+                page: path,
+                category: getCategory(path),
+                label: href.substring(0, 500),
+              });
+            }
+          });
+
+          // ---- Contact section interactions ----
+          // Track email link clicks and copy-email button
+          document.addEventListener('click', function (e) {
+            const el = e.target.closest('a[href^="mailto:"], #copy-email-btn');
+            if (!el) return;
+            track({
+              event_type: 'contact_click',
+              page: path,
+              category: 'contact',
+              label: el.id === 'copy-email-btn' ? 'copy_email' : 'mailto_link',
+            });
+          });
+        })();
+      </script>
+    )}
   </body>
 </html>
