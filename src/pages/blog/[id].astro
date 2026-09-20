@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import RelatedPosts from "../../components/RelatedPosts.astro";
 import { site } from "../../data/site";
 
 export async function getStaticPaths() {
@@ -103,6 +104,8 @@ const showToc = tocHeadings.length >= 3;
           <div class="post-content prose">
             <Content />
           </div>
+
+          <RelatedPosts currentPost={post} />
 
           <div class="post-footer">
             <a href="/blog" class="link-arrow">← Back to all articles</a>

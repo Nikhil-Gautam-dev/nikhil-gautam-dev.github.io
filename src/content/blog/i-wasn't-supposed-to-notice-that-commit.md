@@ -75,3 +75,5 @@ I was just curious enough to ask, **"Why is DevOps pushing this to all these rep
 And that question turned out to be important.
 
 Sometimes being curious is not just useful for learning something new. Sometimes it can save your software.
+
+— _Nikhil Gautam_
