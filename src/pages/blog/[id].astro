@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import RelatedPosts from "../../components/RelatedPosts.astro";
+import NewArticleToast from "../../components/NewArticleToast.astro";
 import { site } from "../../data/site";
 
 export async function getStaticPaths() {
@@ -142,6 +143,7 @@ const showToc = tocHeadings.length >= 3;
       </div>
     </div>
   </article>
+  <NewArticleToast currentPost={post} />
 </BaseLayout>
 
 <script>
