@@ -150,7 +150,7 @@ const fullTitle =
             if (!anchor) return;
             const href = anchor.getAttribute('href') || '';
             // External link = starts with http and NOT our own domain
-            if (/^https?:\/\//.test(href) && !href.includes('nikhil-gautam-dev.github.io')) {
+            if (/^https?:\/\//.test(href) && !href.includes('nikhilgautam.me')) {
               track({
                 event_type: 'outbound_click',
                 page: path,

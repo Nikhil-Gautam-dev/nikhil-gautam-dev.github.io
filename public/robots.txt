@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nikhil-gautam-dev.github.io/sitemap.xml
+Sitemap: https://nikhilgautam.me/sitemap.xml

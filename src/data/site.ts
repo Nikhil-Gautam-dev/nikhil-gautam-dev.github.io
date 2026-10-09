@@ -9,7 +9,7 @@ export const site = {
   email: "malhotranikhil863@gmail.com",
   github: "https://github.com/nikhil-gautam-dev",
   linkedin: "https://www.linkedin.com/in/nikhil-malhotra-80a344218/",
-  url: "https://nikhil-gautam-dev.github.io",
+  url: "https://nikhilgautam.me",
   status: {
     label: "Currently learning",
     value: "Distributed Systems",

@@ -2,7 +2,7 @@
 
 Personal portfolio website for Nikhil Gautam, Backend Engineer.
 
-**Live:** [nikhil-gautam-dev.github.io](https://nikhil-gautam-dev.github.io)
+**Live:** [nikhilgautam.me](https://nikhilgautam.me)
 
 ---
 
@@ -52,14 +52,15 @@ src/
 
 All personal content is stored in data files — update in one place, reflected everywhere:
 
-| File | Content |
-|------|---------|
-| `src/data/site.ts` | Name, email, GitHub, LinkedIn, site URL |
-| `src/data/projects.ts` | Project details, tech, links |
+| File                     | Content                                  |
+| ------------------------ | ---------------------------------------- |
+| `src/data/site.ts`       | Name, email, GitHub, LinkedIn, site URL  |
+| `src/data/projects.ts`   | Project details, tech, links             |
 | `src/data/experience.ts` | Work experience, dates, responsibilities |
-| `src/content/blog/` | Blog posts in Markdown/MDX |
+| `src/content/blog/`      | Blog posts in Markdown/MDX               |
 
 ### Before going live, update:
+
 - `src/data/site.ts` — replace `your-email@gmail.com` and LinkedIn placeholder
 - `src/data/experience.ts` — replace the `[2024]` employment start date
 - `src/data/projects.ts` — add GitHub repository links when repos are public
@@ -89,6 +90,7 @@ readingTime: 8
 Deployment is automatic — push to `main` and GitHub Actions will build and deploy to GitHub Pages.
 
 **GitHub Pages setup required:**
+
 1. Go to repository Settings → Pages
 2. Set source to **GitHub Actions**
 

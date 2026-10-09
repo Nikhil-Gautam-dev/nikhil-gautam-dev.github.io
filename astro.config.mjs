@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://nikhil-gautam-dev.github.io',
+  site: 'https://nikhilgautam.me',
   integrations: [tailwind({
     applyBaseStyles: false,
   }), mdx(), sitemap()],

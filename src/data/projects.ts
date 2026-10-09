@@ -209,7 +209,7 @@ Service   Service    Service`,
     featured: true,
     links: {
       github: "https://github.com/Nikhil-Gautam-dev/nikki",
-      live: "https://nikhil-gautam-dev.github.io/nikki",
+      live: "https://nikhilgautam.me/nikki",
     },
   },
   {
